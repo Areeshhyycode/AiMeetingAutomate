@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-ink text-ambernight antialiased min-h-screen;
+    background:
+      radial-gradient(60% 50% at 80% 0%, rgba(155, 35, 53, 0.10) 0%, transparent 60%),
+      radial-gradient(50% 40% at 0% 100%, rgba(161, 180, 199, 0.06) 0%, transparent 60%),
+      #1B2028;
+  }
+  ::selection {
+    background: #9B2335;
+    color: #E5C7A1;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl border border-blue-coal/80 bg-blue-coal/40 backdrop-blur-sm shadow-card;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-rytmic-red px-4 py-2 text-sm font-medium text-ambernight transition hover:bg-tawny-port disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-blue-coal/60 bg-transparent px-4 py-2 text-sm text-skyway transition hover:border-skyway/40 hover:text-ambernight disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .field-label {
+    @apply text-xs font-medium uppercase tracking-wider text-skyway/80;
+  }
+  .field-input {
+    @apply mt-1 w-full rounded-xl border border-blue-coal bg-ink/60 px-3 py-2 text-sm text-ambernight placeholder:text-skyway/40 outline-none transition focus:border-rytmic-red/60 focus:ring-2 focus:ring-rytmic-red/20;
+  }
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-medium;
+  }
+  .pantone-strip {
+    @apply h-1.5 w-full rounded-full;
+    background: linear-gradient(
+      to right,
+      #E5C7A1 0% 14.3%,
+      #A1B4C7 14.3% 28.6%,
+      #755139 28.6% 42.9%,
+      #9B2335 42.9% 57.2%,
+      #6E2639 57.2% 71.5%,
+      #353D4B 71.5% 85.7%,
+      #5D2028 85.7% 100%
+    );
+  }
+}
