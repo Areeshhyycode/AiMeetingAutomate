@@ -2,7 +2,7 @@
   "name": "aimeeting",
   "version": "0.1.0",
   "private": true,
-  "description": "AI Meeting Automation — upload a recording and get a transcript, summary, action items, and an auto-drafted follow-up email.",
+  "description": "AI Meeting Automation \u2014 upload a recording and get a transcript, summary, action items, and an auto-drafted follow-up email.",
   "keywords": [
     "nextjs",
     "ai",
@@ -27,9 +27,9 @@
     "node": ">=18.17.0"
   },
   "scripts": {
-    "dev": "next dev",
+    "dev": "node api.js && next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "node api.js && next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
