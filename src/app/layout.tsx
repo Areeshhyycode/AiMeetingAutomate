@@ -1,10 +1,26 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Toaster } from "sonner";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "AI Meeting Automation",
-  description: "Record, transcribe, summarize and follow up — automatically.",
+  title: {
+    default: "AI Meeting Automation",
+    template: "%s · AI Meeting Automation",
+  },
+  description:
+    "Upload a meeting recording and get a transcript, summary, action items, and an auto-drafted follow-up email.",
+  applicationName: "AI Meeting Automation",
+  keywords: ["meeting notes", "AI transcription", "action items", "Whisper", "summary"],
+  openGraph: {
+    title: "AI Meeting Automation",
+    description:
+      "Transcribe, summarize and extract action items from any meeting recording.",
+    type: "website",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#1B2028",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
