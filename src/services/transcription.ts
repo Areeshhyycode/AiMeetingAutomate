@@ -1,3 +1,8 @@
+/**
+ * Speech-to-text. Two providers:
+ *  - Groq `whisper-large-v3` — fast and cheap, the default. No speaker labels.
+ *  - OpenAI `gpt-4o-transcribe-diarize` — slower, adds speaker diarization.
+ */
 import Groq from "groq-sdk";
 import OpenAI from "openai";
 import { toFile } from "openai/uploads";
@@ -23,6 +28,7 @@ const openai = process.env.OPENAI_API_KEY
   ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
   : null;
 
+/** Transcribe with Groq Whisper. Returns verbose JSON with segment timings. */
 export async function transcribeWithGroq(
   audio: Buffer,
   fileName: string
@@ -54,6 +60,7 @@ export async function transcribeWithGroq(
   };
 }
 
+/** Transcribe with OpenAI's diarizing model — produces speaker-labelled segments. */
 export async function transcribeWithOpenAIDiarize(
   audio: Buffer,
   fileName: string
@@ -90,6 +97,11 @@ export async function transcribeWithOpenAIDiarize(
   };
 }
 
+/**
+ * Transcribe a recording, choosing a provider:
+ *  - `diarize` requested and OpenAI available → OpenAI diarizing model
+ *  - otherwise → Groq Whisper (falls back to OpenAI if Groq is unconfigured)
+ */
 export async function transcribe(
   audio: Buffer,
   fileName: string,

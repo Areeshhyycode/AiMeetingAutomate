@@ -1,3 +1,8 @@
+/**
+ * Meeting analysis. Sends the transcript to GPT-4o-mini and parses the reply
+ * into a strict schema: summary, key decisions, risks, action items and a
+ * drafted follow-up email. Zod validates the model's JSON before it is used.
+ */
 import OpenAI from "openai";
 import { z } from "zod";
 
@@ -38,6 +43,7 @@ Rules:
 - If the transcript is short, empty, or non-English gibberish, still produce valid JSON — leave arrays empty and put a one-line explanation in summary.
 - Output ONLY valid JSON matching the schema. No prose, no markdown fences.`;
 
+/** Analyze a transcript into a structured, schema-validated meeting summary. */
 export async function summarize(transcript: string): Promise<MeetingSummary> {
   if (!openai) throw new Error("OPENAI_API_KEY missing");
 
