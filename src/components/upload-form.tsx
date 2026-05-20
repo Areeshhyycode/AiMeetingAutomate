@@ -5,9 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Upload, Loader2, FileAudio, Video, Link2 } from "lucide-react";
 import { formatBytes } from "@/lib/utils";
-
-const ACCEPT = ".mp3,.mp4,.mpeg,.mpga,.m4a,.wav,.webm";
-const MAX_MB = 25;
+import { ACCEPT_ATTRIBUTE, MAX_UPLOAD_MB } from "@/lib/config";
 
 type Source = "file" | "loom";
 
@@ -26,8 +24,8 @@ export function UploadForm() {
 
   function onPickFile(f: File | null) {
     if (!f) return;
-    if (f.size > MAX_MB * 1024 * 1024) {
-      toast.error(`File too large. Max ${MAX_MB} MB.`);
+    if (f.size > MAX_UPLOAD_MB * 1024 * 1024) {
+      toast.error(`File too large. Max ${MAX_UPLOAD_MB} MB.`);
       return;
     }
     setFile(f);
@@ -144,14 +142,14 @@ export function UploadForm() {
               <Upload className="h-8 w-8 text-skyway group-hover:text-ambernight" />
               <div className="text-sm text-ambernight">Drop audio file or click to browse</div>
               <div className="text-xs text-skyway/70">
-                mp3 · mp4 · m4a · wav · webm · max {MAX_MB} MB
+                mp3 · mp4 · m4a · wav · webm · max {MAX_UPLOAD_MB} MB
               </div>
             </>
           )}
           <input
             ref={fileRef}
             type="file"
-            accept={ACCEPT}
+            accept={ACCEPT_ATTRIBUTE}
             className="hidden"
             onChange={(e) => onPickFile(e.target.files?.[0] ?? null)}
           />
@@ -168,7 +166,7 @@ export function UploadForm() {
             className="field-input"
           />
           <p className="mt-2 text-xs text-skyway/70">
-            The video must be public (anyone-with-link) and under {MAX_MB} MB.
+            The video must be public (anyone-with-link) and under {MAX_UPLOAD_MB} MB.
             {loomUrl && !isLoomUrl && (
               <span className="text-rytmic-red"> · That doesn’t look like a Loom link.</span>
             )}

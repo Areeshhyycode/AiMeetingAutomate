@@ -7,7 +7,7 @@
  * the transcription pipeline (Groq Whisper accepts mp4 directly).
  */
 
-const MAX_BYTES = 25 * 1024 * 1024;
+import { MAX_UPLOAD_BYTES } from "@/lib/config";
 
 export function parseLoomId(url: string): string | null {
   const m = url
@@ -68,7 +68,7 @@ export async function fetchLoomVideo(url: string): Promise<LoomVideo> {
   }
 
   const contentLength = Number(videoRes.headers.get("content-length") ?? 0);
-  if (contentLength > MAX_BYTES) {
+  if (contentLength > MAX_UPLOAD_BYTES) {
     throw new Error(
       `Loom video is ${(contentLength / 1024 / 1024).toFixed(1)} MB — over the 25 MB limit. ` +
         "Use a shorter recording, or download it and compress to audio first."
@@ -76,7 +76,7 @@ export async function fetchLoomVideo(url: string): Promise<LoomVideo> {
   }
 
   const buffer = Buffer.from(await videoRes.arrayBuffer());
-  if (buffer.length > MAX_BYTES) {
+  if (buffer.length > MAX_UPLOAD_BYTES) {
     throw new Error(
       `Loom video is ${(buffer.length / 1024 / 1024).toFixed(1)} MB — over the 25 MB limit. ` +
         "Use a shorter recording, or download it and compress to audio first."

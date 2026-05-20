@@ -5,13 +5,12 @@ import { transcribe } from "@/services/transcription";
 import { summarize } from "@/services/summarization";
 import { sendFollowUp } from "@/services/email";
 import { fetchLoomVideo } from "@/services/loom";
+import { MAX_UPLOAD_BYTES, MEETING_HISTORY_LIMIT } from "@/lib/config";
 
 export const runtime = "nodejs";
 // Vercel Hobby caps function duration at 60s; Pro allows more. Keep 60 so the
 // deploy is valid on either plan. Long recordings need an async queue (Phase 2).
 export const maxDuration = 60;
-
-const MAX_BYTES = 25 * 1024 * 1024;
 
 export async function GET() {
   try {
@@ -25,7 +24,7 @@ export async function GET() {
       "followUpEmail.sentAt": 1,
     })
       .sort({ createdAt: -1 })
-      .limit(50)
+      .limit(MEETING_HISTORY_LIMIT)
       .lean();
     return NextResponse.json({ meetings });
   } catch (err) {
@@ -54,9 +53,9 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-    if (hasFile && file.size > MAX_BYTES) {
+    if (hasFile && file.size > MAX_UPLOAD_BYTES) {
       return NextResponse.json(
-        { error: `File too large (${file.size} bytes, max ${MAX_BYTES})` },
+        { error: `File too large (${file.size} bytes, max ${MAX_UPLOAD_BYTES})` },
         { status: 413 }
       );
     }
