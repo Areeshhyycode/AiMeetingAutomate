@@ -6,6 +6,7 @@ import { Meeting } from "@/models/Meeting";
 import { formatDuration } from "@/lib/utils";
 import { SendEmailButton } from "@/components/send-email-button";
 import { DeleteMeetingButton } from "@/components/delete-meeting-button";
+import { CopyButton } from "@/components/copy-button";
 import { ArrowLeft, CheckCircle2, AlertTriangle, ListChecks, FileText, Mail } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -125,13 +126,22 @@ export default async function MeetingDetail({ params }: { params: { id: string }
             <div className="flex items-center gap-2 text-sm font-medium text-ambernight">
               <Mail className="h-4 w-4 text-skyway" /> Follow-up email
             </div>
-            {sent ? (
-              <span className="badge border-ambernight/40 text-ambernight">
-                sent {new Date(sent as unknown as string).toLocaleString()}
-              </span>
-            ) : (
-              <SendEmailButton id={params.id} disabled={(m.followUpEmail.to?.length ?? 0) === 0} />
-            )}
+            <div className="flex items-center gap-2">
+              <CopyButton
+                text={`Subject: ${m.followUpEmail.subject}\n\n${m.followUpEmail.body}`}
+                label="Copy email"
+              />
+              {sent ? (
+                <span className="badge border-ambernight/40 text-ambernight">
+                  sent {new Date(sent as unknown as string).toLocaleString()}
+                </span>
+              ) : (
+                <SendEmailButton
+                  id={params.id}
+                  disabled={(m.followUpEmail.to?.length ?? 0) === 0}
+                />
+              )}
+            </div>
           </div>
           {m.followUpEmail.to && m.followUpEmail.to.length > 0 && (
             <div className="mb-2 text-xs text-skyway/80">
