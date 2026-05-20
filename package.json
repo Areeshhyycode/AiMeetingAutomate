@@ -2,6 +2,30 @@
   "name": "aimeeting",
   "version": "0.1.0",
   "private": true,
+  "description": "AI Meeting Automation — upload a recording and get a transcript, summary, action items, and an auto-drafted follow-up email.",
+  "keywords": [
+    "nextjs",
+    "ai",
+    "whisper",
+    "openai",
+    "groq",
+    "meeting-notes",
+    "transcription",
+    "mongodb"
+  ],
+  "author": "Areeshhyycode",
+  "license": "MIT",
+  "homepage": "https://github.com/Areeshhyycode/AiMeetingAutomate#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Areeshhyycode/AiMeetingAutomate.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Areeshhyycode/AiMeetingAutomate/issues"
+  },
+  "engines": {
+    "node": ">=18.17.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
