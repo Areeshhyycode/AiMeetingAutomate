@@ -9,4 +9,7 @@ dist
 .DS_Store
 uploads/
 tsconfig.tsbuildinfo
+test-meeting.wav
+*.local.wav
+.claude/
 

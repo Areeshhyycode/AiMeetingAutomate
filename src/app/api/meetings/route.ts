@@ -4,6 +4,7 @@ import { Meeting } from "@/models/Meeting";
 import { transcribe } from "@/services/transcription";
 import { summarize } from "@/services/summarization";
 import { sendFollowUp } from "@/services/email";
+import { fetchLoomVideo } from "@/services/loom";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -29,18 +30,20 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   const formData = await req.formData();
   const file = formData.get("audio");
+  const loomUrl = (formData.get("loomUrl") as string | null)?.trim() ?? "";
   const title = (formData.get("title") as string | null) ?? "Untitled meeting";
   const diarize = formData.get("diarize") === "true";
   const recipientsRaw = (formData.get("recipients") as string | null) ?? "";
   const sendEmail = formData.get("sendEmail") === "true";
 
-  if (!file || !(file instanceof File)) {
-    return NextResponse.json({ error: "No audio file provided" }, { status: 400 });
+  const hasFile = file instanceof File && file.size > 0;
+  if (!hasFile && !loomUrl) {
+    return NextResponse.json(
+      { error: "Provide an audio file or a Loom link" },
+      { status: 400 }
+    );
   }
-  if (file.size === 0) {
-    return NextResponse.json({ error: "Empty audio file" }, { status: 400 });
-  }
-  if (file.size > MAX_BYTES) {
+  if (hasFile && file.size > MAX_BYTES) {
     return NextResponse.json(
       { error: `File too large (${file.size} bytes, max ${MAX_BYTES})` },
       { status: 413 }
@@ -54,19 +57,36 @@ export async function POST(req: NextRequest) {
 
   await connectDB();
 
+  // Resolve the source into an audio/video buffer before persisting size.
+  let buffer: Buffer;
+  let sourceName: string;
+  try {
+    if (loomUrl) {
+      const loom = await fetchLoomVideo(loomUrl);
+      buffer = loom.buffer;
+      sourceName = loom.fileName;
+    } else {
+      buffer = Buffer.from(await (file as File).arrayBuffer());
+      sourceName = (file as File).name;
+    }
+  } catch (err) {
+    return NextResponse.json(
+      { error: err instanceof Error ? err.message : "Could not load the recording" },
+      { status: 400 }
+    );
+  }
+
   const created = await Meeting.create({
     title,
-    audioFileName: file.name,
-    audioSizeBytes: file.size,
+    audioFileName: sourceName,
+    audioSizeBytes: buffer.length,
     status: "transcribing",
     followUpEmail: { to: recipients, subject: "", body: "" },
   });
   const id = created._id.toString();
 
   try {
-    const buffer = Buffer.from(await file.arrayBuffer());
-
-    const transcription = await transcribe(buffer, file.name, { diarize });
+    const transcription = await transcribe(buffer, sourceName, { diarize });
     await Meeting.findByIdAndUpdate(id, {
       $set: {
         transcript: transcription.text,
