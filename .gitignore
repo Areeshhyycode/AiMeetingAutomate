@@ -2,8 +2,6 @@ node_modules
 .next
 out
 dist
-.env
-.env.local
 .env*.local
 *.log
 .DS_Store
@@ -13,3 +11,4 @@ test-meeting.wav
 *.local.wav
 .claude/
 
+config.bat
