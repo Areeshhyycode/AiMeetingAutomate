@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { connectDB } from "@/lib/db";
 import { Meeting } from "@/models/Meeting";
-import { formatDuration } from "@/lib/utils";
+import { formatDuration, formatRelativeTime } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -51,7 +51,7 @@ export default async function MeetingsPage() {
             <div className="truncate text-sm font-medium text-ambernight">{m.title}</div>
             <div className="truncate text-xs text-skyway/70">
               {m.audioFileName} · {formatDuration(m.durationSeconds)} ·{" "}
-              {new Date(m.createdAt as unknown as string).toLocaleString()}
+              {formatRelativeTime(m.createdAt as unknown as string)}
             </div>
           </div>
           <div className="flex items-center gap-2">
