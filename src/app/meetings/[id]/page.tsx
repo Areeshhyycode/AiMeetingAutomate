@@ -5,6 +5,7 @@ import { connectDB } from "@/lib/db";
 import { Meeting } from "@/models/Meeting";
 import { formatDuration } from "@/lib/utils";
 import { SendEmailButton } from "@/components/send-email-button";
+import { DeleteMeetingButton } from "@/components/delete-meeting-button";
 import { ArrowLeft, CheckCircle2, AlertTriangle, ListChecks, FileText, Mail } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -37,7 +38,10 @@ export default async function MeetingDetail({ params }: { params: { id: string }
               {new Date(m.createdAt as unknown as string).toLocaleString()}
             </p>
           </div>
-          <span className="badge border-ambernight/40 text-ambernight">{m.status}</span>
+          <div className="flex items-center gap-2">
+            <span className="badge border-ambernight/40 text-ambernight">{m.status}</span>
+            <DeleteMeetingButton id={params.id} />
+          </div>
         </div>
       </div>
 
